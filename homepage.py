@@ -23,7 +23,7 @@ st.markdown('<link href="https://fonts.googleapis.com/css2?family=Orbitron&displ
 
 selected = option_menu(
     menu_title="StatSphere",
-    options=["Home", "Game Viewer", "Era Showdown", "Performance Visualizer", "Stat Stars"],
+    options=["Game Viewer", "Era Showdown", "Performance Visualizer", "Stat Stars"],
     icons=["house", "calendar-date", "clipboard-data", "graph-up-arrow", "clipboard-data-fill"],
     menu_icon="display",
     default_index=0,
@@ -289,14 +289,6 @@ def calculate_single_game_fanduel_points(game_stats):
 
 #Functions that will be displayed on Streamlit app
 def gameViewer():
-    with st.expander("How to use:"):
-        st.write('Use the date selector on the left to jump forwards or backwards in the current season,'
-                 'or as far back as 2014')
-    st.markdown("""
-        <h1 style='text-align: center; font-family: "Roboto", sans-serif; font-weight: bold; font-size: 36px;'>
-            <span style='color: #1E90FF;'>Game Viewer</span>
-        </h1>
-        """, unsafe_allow_html=True)
     st.markdown('##')
     game_date_column, schedule_column = st.columns([1,4])
     selected_date = game_date_column.date_input("Select a date")
@@ -1574,29 +1566,7 @@ def seasonAverageFilter():
                 cols[i].metric(field.upper(), value)
 
 
-if selected == "Home":
-    st.header('Description:')
-    st.markdown('##')
-    st.markdown("StatSphere is a sleek and innovative sports "
-                "analytics platform, where fans"
-                " can dive into a world of data-driven insights. "
-                "Explore your favorite players' performance metrics, "
-                "compare their statistics, and uncover hidden patterns"
-                " that shape the game. StatSphere is your go-to destination"
-                " for in-depth sports analysis, transforming the way you "
-                "experience and understand you favorite NBA players.")
-    st_lottie(
-            bball1,
-            speed=1,
-            loop=True,
-            quality='medium',
-            height=300,
-            width=None,
-            key=None,
-            )
-    
-    st.markdown('---')
-elif selected == "Game Viewer":
+if selected == "Game Viewer":
     gameViewer()
 elif selected == "Era Showdown":
     era_compare()

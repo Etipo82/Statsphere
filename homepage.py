@@ -705,25 +705,6 @@ def playerCharts():
 
 
 def playerChart():
-    with st.expander("How to use:"):
-        st.write('🏀 Take a trip through NBA history! Select a season as far back as 1947, or '
-                 'simply explore the current one. Pick your player and let the games begin! 🚀')
-        st.markdown('---')
-        st.write("""
-                Welcome to the Player Stat Dashboard, your one-stop-shop for all things basketball stats! 🏀 Here's how to become a hoops-stats whiz in no time:
-
-                1. **Pick your baller:** Got a favorite player? Select 'em from the left sidebar, where you can find a nifty dropdown menu. Type away or scroll through to find your star! 🌟
-
-                2. **Choose your season:** Want to reminisce about past glories or stay up-to-date on the latest season? Slide or type in the year on the left sidebar and voilà! 📅
-
-                3. **Season Averages Extravaganza:** Once you've got your player and season, feast your eyes on their full season averages! Points, rebounds, assists – we've got it all! 📊
-
-                4. **Last 10 Games Flashback:** Curious about a player's recent performances? Pick a number (1-10) in the left column, and watch as their last N games' stats magically appear! Oh, and we didn't forget the FanDuel points! 🎩✨
-
-                5. **Filter by Foes:** Ever wonder how your player fares against specific teams? Use the dropdown menu at the bottom to pick a rival, and we'll reveal all the juicy stats from those games! 🥊
-
-                So, what are you waiting for? Dive in and have a ball exploring your favorite player's stats! 🎉
-                """)
     st.markdown("""
         <h1 style='text-align: center; font-family: "Roboto", sans-serif; font-weight: bold; font-size: 36px;'>
             <span style='color: #1E90FF;'>Player Performance Visualizer</span>
@@ -1409,10 +1390,6 @@ def playerChart():
 
 
 def era_compare():
-    with st.expander("How to use:"):
-        st.write('Feeling nostalgic? Compare players from different eras! '
-                 'Select up to 7 players and the years you want to compare them in. '
-                 'Witness the epic showdown between the legends of the past and the stars of today!')
     st.markdown("""
         <h1 style='text-align: center; font-family: "Roboto", sans-serif; font-weight: bold; font-size: 36px;'>
             <span style='color: #1E90FF;'>Era Showdown: Legends vs. Rising Stars</span>

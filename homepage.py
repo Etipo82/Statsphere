@@ -5,6 +5,7 @@ import os
 import json
 import pandas as pd
 import plotly.express as px
+from pandas.api.types import CategoricalDtype
 from streamlit_lottie import st_lottie
 import altair as alt
 from PIL import Image
@@ -325,10 +326,10 @@ def gameViewer():
             status = game['status']
 
             with schedule_column.expander(f"{home_team} {home_score} :vs: {visitor_team} {visitor_score} ({status})"):
-                weather_data = fetch_weather(home_city)
-                current_temp = weather_data['current']['temp_f']
-                current_condition = weather_data['current']['condition']['text']
-                st.write(f"Current weather in {home_city}: {current_temp}°F, {current_condition}")
+                #weather_data = fetch_weather(home_city)
+                #current_temp = weather_data['current']['temp_f']
+                #current_condition = weather_data['current']['condition']['text']
+                #st.write(f"Current weather in {home_city}: {current_temp}°F, {current_condition}")
                 game_stats = []
                 for player in game_stats_data:
                     points = player['pts']
@@ -725,7 +726,7 @@ def playerChart():
 
                 3. **Season Averages Extravaganza:** Once you've got your player and season, feast your eyes on their full season averages! Points, rebounds, assists – we've got it all! 📊
 
-                4. **Last N Games Flashback:** Curious about a player's recent performances? Pick a number (1-10) in the left column, and watch as their last N games' stats magically appear! Oh, and we didn't forget the FanDuel points! 🎩✨
+                4. **Last 10 Games Flashback:** Curious about a player's recent performances? Pick a number (1-10) in the left column, and watch as their last N games' stats magically appear! Oh, and we didn't forget the FanDuel points! 🎩✨
 
                 5. **Filter by Foes:** Ever wonder how your player fares against specific teams? Use the dropdown menu at the bottom to pick a rival, and we'll reveal all the juicy stats from those games! 🥊
 
@@ -773,6 +774,7 @@ def playerChart():
                 num_games_with_stat = stats[stats['pts'] > 0].shape[0]  # Number of games with the stat greater than 0
                 months = pd.to_datetime(stats['game.date']).dt.month_name()
                 months_counts = stats['pts'].groupby(months).sum()
+                bar_chart = px.bar(months_counts.reset_index(), x='game.date', y='pts', title='Points by Month')
 
                 stats['pts_range'] = pd.cut(stats['pts'], bins=bins, labels=labels)
 
@@ -780,7 +782,9 @@ def playerChart():
                 stat_range_counts = stats['pts_range'].value_counts()
 
                 # Create a pie chart for month-wise total stats
-                pie_chart = px.pie(months_counts.reset_index(), values='pts', names='game.date', title='Points by Month')
+                #pie_chart = px.pie(months_counts.reset_index(), values='pts', names='game.date', title='Points by Month')
+                #pie_chart = px.pie(months_counts.reset_index(), values='pts', names='game.date', title='Points by Month', hover_data=['pts'])
+
 
                 # Create a pie chart for stat range
                 stat_range_pie_chart = px.pie(stat_range_counts.reset_index(), values='pts_range', names='index', title=f'Points scored Range {num_games}')
@@ -788,7 +792,8 @@ def playerChart():
                 # Display the pie charts
                 chart1_column, chart2_column = st.columns(2)
                 with st.container():
-                    chart1_column.plotly_chart(pie_chart)
+                    #chart1_column.plotly_chart(pie_chart)
+                    chart1_column.plotly_chart(bar_chart)
                     chart2_column.plotly_chart(stat_range_pie_chart)
 
             if chart_option == 'ast':
@@ -1287,23 +1292,23 @@ def playerChart():
                 
 
     chart_options = {
-    "Points scored": "pts",
-    "Assists": "ast",
-    "Minutes played": "min",
-    "Field Goal %": "fg_pct",
-    "Field Goals Made": "fgm",
-    "Rebounds": "reb",
-    "Field Goal Attempted": 'fga',
-    "Blocks": 'blk',
-    "3-pointers Made": '3pm',
-    "3-pointers Attempted": '3pa',
-    "3-point %": '3pt_pct',
-    "steals": 'stl',
-    "Free Throw Attemps": 'fta',
-    "Free Throws Made": 'ftm',
-    "Turnovers": "Turnovers",
-    "Field Goals Made": "Field Goals Made",
-    }
+        "Points scored": "pts",
+        "Assists": "ast",
+        "Minutes played": "min",
+        "Field Goal %": "fg_pct",
+        "Field Goals Made": "fgm",
+        "Rebounds": "reb",
+        "Field Goal Attempted": 'fga',
+        "Blocks": 'blk',
+        "3-pointers Made": '3pm',
+        "3-pointers Attempted": '3pa',
+        "3-point %": '3pt_pct',
+        "steals": 'stl',
+        "Free Throw Attemps": 'fta',
+        "Free Throws Made": 'ftm',
+        "Turnovers": "Turnovers",
+        "Field Goals Made": "Field Goals Made",
+        }
 
     # Define the selected chart as a radio button
     selected_chart = st.sidebar.radio("Select a chart to show:", list(chart_options.keys()), index=0)
@@ -1376,7 +1381,7 @@ def playerChart():
                             columns[5].metric("3PM", game_stats['fg3m'])
 
                             fanduel_points = fanduel_points_last_n_games.loc[index, "total"]
-                            columns[6].metric("FD Points", fanduel_points)
+                            columns[6].metric("Fantasy", fanduel_points)
                         st.markdown('---')
     
                 with st.container():
@@ -1398,7 +1403,7 @@ def playerChart():
                             # Calculate FanDuel points for the current game
                             #try:
                             current_game_fd_points = calculate_single_game_fanduel_points(game_stats)
-                            team_stats_container[6].metric("FD Points", current_game_fd_points)
+                            team_stats_container[6].metric("Fantasy", current_game_fd_points)
                             #except TypeError:
                             #st.warning('Too far back to calculate')
 
@@ -1535,7 +1540,9 @@ def seasonAverageFilter():
 
     # Select the fields to filter for
     selected_fields = st.sidebar.multiselect('Select fields to filter for:', options=fields, default=['games_played', 'pts', 'reb', 'ast'])
-    selected_year = st.sidebar.multiselect('Select year:', options=forYear, default=['2022'])
+    selected_year = st.sidebar.selectbox('Select year:', options=forYear)
+
+    stats_df = stats_df[stats_df['season'] == int(selected_year)]
 
     # Create sliders for the selected fields and filter the DataFrame
     for field in selected_fields:

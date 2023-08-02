@@ -3,3 +3,4 @@ pandas
 plotly
 plotly.express
 sqlalchemy
+streamlit_lottie
